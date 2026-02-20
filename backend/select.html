@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Select</title>
+</head>
+<body>
+
+<h1>Users</h1>
+
+<h3 id="editTitle" style="display:none;">Update User</h3>
+<form id="updateForm" style="display:none;">
+    <input id="upName" placeholder="Name"><br>
+    <input id="upEmail" placeholder="Email"><br>
+    <input id="upPassword" placeholder="Password"><br>
+    <button type="button" onclick="submitUpdate()">Update</button>
+</form>
+
+<ul id="userList"></ul>
+
+<script>
+let userList = document.getElementById("userList");
+let selectedId = null;
+
+function Retrieve(){
+    fetch("http://localhost:1010/select")
+    .then(res => res.json())
+    .then(data => {
+        userList.innerHTML = '';
+        data.forEach(user => {
+            userList.innerHTML += `
+                <li>
+                    ${user.id}. ${user.name} - ${user.email}
+                    <button onclick="deleteuser(${user.id})">delete</button>
+                    <button onclick="update(${user.id})">update</button>
+                </li>`;
+        });
+    });
+}
+
+function deleteuser(id){
+    fetch(`http://localhost:1010/delete/${id}`, { method: "DELETE" })
+        .then(() => Retrieve());
+}
+
+function update(id){
+    selectedId = id;
+    document.getElementById("updateForm").style.display = "block";
+    document.getElementById("editTitle").style.display = "block";
+
+    fetch("http://localhost:1010/select")
+        .then(res => res.json())
+        .then(users => {
+            const user = users.find(u => u.id == id);
+            upName.value = user.name;
+            upEmail.value = user.email;
+            upPassword.value = user.password;
+        });
+}
+
+function submitUpdate(){
+    fetch(`http://localhost:1010/update/${selectedId}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+            name: upName.value,
+            email: upEmail.value,
+            password: upPassword.value
+        })
+    })
+    .then(() => {
+        updateForm.style.display = "none";
+        editTitle.style.display = "none";
+        Retrieve();
+    });
+}
+
+Retrieve();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+</head>
+<body>
+
+    <h3>Register</h3>
+
+    <form id="myForm">
+        <input type="text" id="name" placeholder="Name"><br>
+        <input type="text" id="email" placeholder="Email"><br>
+        <input type="password" id="password" placeholder="Password"><br>
+        <button type="submit">Log</button>
+    </form>
+
+    <p id="msg"></p>
+
+    <script>
+        const form = document.getElementById("myForm");
+        const msg = document.getElementById("msg");
+
+        form.addEventListener("submit", function (e) {
+            e.preventDefault(); // stop page refresh
+
+            const name = document.getElementById("name").value;
+            const email = document.getElementById("email").value;
+            const password = document.getElementById("password").value;
+
+            fetch("http://localhost:1010/create", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    name: name,
+                    email: email,
+                    password: password
+                })
+            })
+            .then(res => res.json())
+            .then(data => {
+                msg.innerText = data.message;
+                form.reset();
+            })
+            .catch(err => {
+                msg.innerText = "Error ";
+                console.error(err);
+            });
+        });
+    </script>
+
+</body>
+</html>

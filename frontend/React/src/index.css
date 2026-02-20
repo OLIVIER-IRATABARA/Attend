@@ -1,0 +1,16 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+@keyframes slide {
+  0% { transform: translateY(0); }
+  25% { transform: translateY(-100%); }
+  50% { transform: translateY(-200%); }
+  75% { transform: translateY(-300%); }
+  100% { transform: translateY(0); }
+}
+
+.animate-slide {
+  display: grid;
+  grid-template-rows: repeat(4, 100vh);
+  animation: slide 50s infinite;
+}
