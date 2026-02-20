@@ -8,6 +8,7 @@ import Help from "./components/Help";
 import Book from "./components/Book";
 import SignUp2 from "./components/SignUp2";
 import Public from "./components/Public";
+import EventDetail from "./components/detailEvent";
 
 function App() {
   return (
@@ -22,7 +23,7 @@ function App() {
         <Route path="/book" element={<Book/>}/>
       <Route path="/sign2" element={<SignUp2/>}/>
       <Route path="/" element={<Public/>}/>
-      <Route path="/detailEvent/:id" element={<detailEvent/>}/>
+      <Route path="/detailEvent/:id" element={<EventDetail/>}/>
       </Routes>
     // <Home/>
     // <detailEvent/>

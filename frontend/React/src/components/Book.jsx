@@ -1,17 +1,20 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import axios from 'axios';
-
+import { useNavigate } from 'react-router-dom';
 export default function Book() {
   const [events, setEvents] = useState([])
+  const navigate = useNavigate();
+  useEffect(()=>{
   axios.get("http://localhost:1010/events/explore", { withCredentials: true })
   .then(res => setEvents(res.data))
   .catch(err => console.error(err));
+  },[])
   return (
     <div>
         <section className="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
   {events.map((event) => (
     <div key={event._id} className="group bg-white border border-gray-100 rounded-2xl overflow-hidden transition-all duration-300 hover:shadow-2xl hover:-translate-y-2"
-    onClick={() => navigate(`/event/${event._id}`)}>
+    onClick={() => navigate(`/detailEvent/${event._id}`)}>
       {/* Event Image Container */}
       <div className="relative h-48 w-full overflow-hidden">
         <img 

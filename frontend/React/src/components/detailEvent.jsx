@@ -28,15 +28,15 @@ export default function EventDetail() {
         <div className="p-8">
           <h1 className="text-4xl font-extrabold text-gray-900 mb-4">{event.eventname}</h1>
           <div className="flex gap-4 mb-6">
-            <span className="bg-indigo-100 text-indigo-700 px-4 py-1 rounded-full text-sm font-semibold">
-              📅 {new Date(event.date).toLocaleDateString()}
+            <span className="text-indigo-700 px-4 py-1 rounded-full text-sm font-semibold">
+               {new Date(event.event_date).toLocaleDateString()} : {event.event_time}
             </span>
-            <span className="bg-green-100 text-green-700 px-4 py-1 rounded-full text-sm font-semibold">
-              📍 {event.location || "Rwanda"}
+            <span className="bg-black-400 text-green-700 px-4 py-1 rounded-full text-sm font-semibold">
+               {event.location || "Rwanda"}
             </span>
           </div>
           <p className="text-gray-600 leading-relaxed text-lg">
-            {event.description || "Join us for this amazing event! Secure your tickets now to ensure your spot."}
+            {event.eventdescription || "Join us for this amazing event! Secure your tickets now to ensure your spot."}
           </p>
           <button className="mt-8 w-full py-4 bg-indigo-600 text-white font-bold rounded-xl hover:bg-indigo-700 transition-all shadow-lg">
             Book Tickets Now

@@ -39,6 +39,7 @@ export default function Host() {
 
   return (
     <div className="min-h-screen bg-gray-100 flex items-center justify-center p-6">
+      <button onClick={() => navigate(-1)} className="mb-6 text-indigo-600 font-bold">← Back</button>
       <div className="bg-white w-full max-w-3xl rounded-2xl shadow-lg p-8">
         <h2 className="text-3xl font-bold text-gray-800 mb-6">Host an Event</h2>
 
