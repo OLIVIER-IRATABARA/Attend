@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
+import {Link} from 'react-router-dom'
 
 export default function EventDetail() {
   const { id } = useParams(); // Gets the ID from the URL
@@ -38,8 +39,9 @@ export default function EventDetail() {
           <p className="text-gray-600 leading-relaxed text-lg">
             {event.eventdescription || "Join us for this amazing event! Secure your tickets now to ensure your spot."}
           </p>
-          <button className="mt-8 w-full py-4 bg-indigo-600 text-white font-bold rounded-xl hover:bg-indigo-700 transition-all shadow-lg">
+          <button className="mt-8 w-full py-4 bg-indigo-600 text-white font-bold rounded-xl hover:bg-indigo-700 transition-all shadow-lg"><Link to="/BookingTicket">
             Book Tickets Now
+            </Link>
           </button>
         </div>
       </div>

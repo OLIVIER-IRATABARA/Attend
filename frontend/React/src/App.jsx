@@ -9,6 +9,7 @@ import Book from "./components/Book";
 import SignUp2 from "./components/SignUp2";
 import Public from "./components/Public";
 import EventDetail from "./components/detailEvent";
+import BookingTicket from "./components/BookingTicket";
 
 function App() {
   return (
@@ -24,9 +25,11 @@ function App() {
       <Route path="/sign2" element={<SignUp2/>}/>
       <Route path="/" element={<Public/>}/>
       <Route path="/detailEvent/:id" element={<EventDetail/>}/>
+      <Route path="/BookingTicket" element={<BookingTicket/>}/>
       </Routes>
     // <Home/>
     // <detailEvent/>
+    //<BookingTicket/>
   );
 }
 
