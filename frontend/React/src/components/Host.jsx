@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 export default function Host() {
   const [eventname, setEventname] = useState("");
@@ -7,6 +8,7 @@ export default function Host() {
   const [event_time, setEventTime] = useState("");
   const [location, setLocation] = useState("");
   const [photo, setPhoto] = useState(null);
+  const navigate = useNavigate()
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -33,6 +35,7 @@ export default function Host() {
         setEventTime("");
         setLocation("");
         setPhoto(null);
+        navigate("/conthost", { state: { eventId: resData.eventId } });
       })
       .catch((err) => console.error(err));
   };
@@ -103,7 +106,7 @@ export default function Host() {
           
 
           <button className="w-full bg-indigo-600 text-white p-3 rounded">
-            Create Event
+            Continue
           </button>
         </form>
       </div>

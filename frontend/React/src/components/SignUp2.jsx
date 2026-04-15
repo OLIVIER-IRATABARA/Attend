@@ -32,7 +32,6 @@ export default function SignUp2() {
         alert("Profile created successfully!");
         setUsername("");
         setBio("");
-        setPhone("");
         setLocation("");
         setProfilePhoto(null);
         navigate("/home");

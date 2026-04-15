@@ -15,6 +15,8 @@ export default function EventDetail() {
   }, [id]);
 
   if (!event) return <div className="text-white text-center mt-20">Loading Event...</div>;
+  console.log("Current event data:", event);
+
 
   return (
     <div className="min-h-screen bg-gray-50 p-8">
@@ -36,9 +38,12 @@ export default function EventDetail() {
                {event.location || "Rwanda"}
             </span>
           </div>
+          
+
+          <button className="mt-8 w-full py-4 bg-indigo-600 text-white font-bold rounded-xl hover:bg-indigo-700 transition-all shadow-lg">
           <p className="text-gray-600 leading-relaxed text-lg">
             {event.eventdescription || "Join us for this amazing event! Secure your tickets now to ensure your spot."}
-          </p>
+          </p></button>
           <button className="mt-8 w-full py-4 bg-indigo-600 text-white font-bold rounded-xl hover:bg-indigo-700 transition-all shadow-lg"><Link to="/BookingTicket">
             Book Tickets Now
             </Link>
