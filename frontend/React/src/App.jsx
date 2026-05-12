@@ -11,7 +11,7 @@ import Public from "./components/Public";
 import EventDetail from "./components/detailEvent";
 import BookingTicket from "./components/BookingTicket";
 import ContHost from "./components/ContHost";
-import AboutUser from "./components/Aboutuser";
+// import AboutUser from "./components/Aboutuser";
 
 
 function App() {
