@@ -16,7 +16,7 @@ export default function Home() {
       return;
     }
 
-    fetch(`http://localhost:1010/display/${userId}`, { credentials: 'include' })
+    fetch(`https://attend-02uf.onrender.com/display/${userId}`, { credentials: 'include' })
       .then((res) => {
         if (res.status === 401) navigate('/login');
         return res.json();
@@ -26,13 +26,13 @@ export default function Home() {
   }, [navigate]);
 
   useEffect(() => {
-    axios.get('http://localhost:1010/events/explore', { withCredentials: true })
+    axios.get('https://attend-02uf.onrender.com/events/explore', { withCredentials: true })
       .then(res => setEvents(res.data))
       .catch(err => console.error(err));
   }, []);
 
   const handleLogout = () => {
-    fetch('http://localhost:1010/logout', { method: 'POST', credentials: 'include' })
+    fetch('https://attend-02uf.onrender.com/logout', { method: 'POST', credentials: 'include' })
       .then(() => {
         localStorage.removeItem('userId');
         navigate('/');
@@ -62,7 +62,7 @@ export default function Home() {
           >
             {profile?.profilePhoto && (
               <img 
-                src={`http://localhost:1010/uploads/${profile.profilePhoto}`} 
+                src={`https://attend-02uf.onrender.com/uploads/${profile.profilePhoto}`} 
                 className="w-10 h-10 rounded-full object-cover border-2 border-white" 
                 alt="profile" 
               />
@@ -100,7 +100,7 @@ export default function Home() {
               <div key={event._id} className="group bg-white border border-gray-100 rounded-2xl overflow-hidden shadow-sm hover:shadow-2xl transition-all duration-300 hover:-translate-y-2">
                 <div className="relative h-48 w-full overflow-hidden">
                   <img 
-                    src={`http://localhost:1010/uploads/${event.photo}`} 
+                    src={`https://attend-02uf.onrender.com/uploads/${event.photo}`} 
                     alt={event.eventname} 
                     className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" 
                   />

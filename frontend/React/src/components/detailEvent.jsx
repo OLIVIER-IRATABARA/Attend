@@ -9,7 +9,7 @@ export default function EventDetail() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    axios.get(`http://localhost:1010/events/explore/${id}`, { withCredentials: true })
+    axios.get(`https://attend-02uf.onrender.com/events/explore/${id}`, { withCredentials: true })
       .then(res => setEvent(res.data))
       .catch(err => console.error("Event not found", err));
   }, [id]);
@@ -24,7 +24,7 @@ export default function EventDetail() {
       
       <div className="max-w-4xl mx-auto bg-white rounded-3xl shadow-2xl overflow-hidden">
         <img 
-          src={`http://localhost:1010/uploads/${event.photo}`} 
+          src={`https://attend-02uf.onrender.com/uploads/${event.photo}`} 
           className="w-full h-96 object-cover" 
           alt={event.eventname} 
         />

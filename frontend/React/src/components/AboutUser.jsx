@@ -9,7 +9,7 @@ export default function AboutUser({ profile }) {
     const confirmLogout = window.confirm("Are you sure you want to logout from Attend Rwanda?");
     
     if (confirmLogout) {
-      fetch('http://localhost:1010/logout', { 
+      fetch('https://attend-02uf.onrender.com/logout', { 
         method: 'POST', 
         credentials: 'include' 
       })
@@ -29,7 +29,7 @@ export default function AboutUser({ profile }) {
       <div className="p-4 bg-indigo-600 text-white flex flex-col items-center gap-2">
         {profile.profilePhoto ? (
           <img 
-            src={`http://localhost:1010/uploads/${profile.profilePhoto}`} 
+            src={`https://attend-02uf.onrender.com/uploads/${profile.profilePhoto}`} 
             className="w-16 h-16 rounded-full object-cover border-2 border-white shadow-md" 
             alt="User" 
           />

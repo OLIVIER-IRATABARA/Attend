@@ -9,7 +9,7 @@ const session = require("express-session");
 const MongoStore = require("connect-mongo").MongoStore;
 
 const app = express();
-const PORT = process.env.PORT || 1010; // Use Render's port or 1010 locally
+const PORT = process.env.PORT || 10000; // Use Render's port or 1010 locally
 
 const rawMongoUrl = process.env.MONGODB_URL || "";
 const mongoUrl = rawMongoUrl
@@ -19,7 +19,7 @@ const mongoUrl = rawMongoUrl
 
 if (!mongoUrl) {
   console.error("MONGODB_URL is required and must start with mongodb:// or mongodb+srv://");
-  process.exit(1);
+  process.exit(1)
 }
 
 // ------------------ MongoDB Connection ------------------
@@ -39,7 +39,7 @@ const cleanFrontendUrl = rawFrontendUrl
 
 // 2. Use the CLEANED variable in CORS
 app.use(cors({
-  origin: cleanFrontendUrl, 
+  origin: [cleanFrontendUrl, "https://attend-1-w4fe.onrender.com"],
   credentials: true
 }));
 
@@ -336,6 +336,6 @@ app.get("/events/explore/:id", async (req, res) => {
 });
 
 // ------------------ Start Server ------------------
-app.listen(PORT, () =>
+app.listen(PORT,'0.0.0.0', () =>
   console.log(`Server started on http://localhost:${PORT}`)
 );

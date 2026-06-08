@@ -26,7 +26,7 @@ export default function ContHost() {
         };
 
         // Note the endpoint: /events/createcont
-        axios.post("http://localhost:1010/events/createcont", costData)
+        axios.post("https://attend-02uf.onrender.com/events/createcont", costData)
             .then(res => {
                 alert("Pricing saved successfully!");
                 navigate("/home"); // Redirect to home/explore

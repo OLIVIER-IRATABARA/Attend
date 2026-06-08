@@ -11,12 +11,8 @@ import Public from "./components/Public";
 import EventDetail from "./components/detailEvent";
 import BookingTicket from "./components/BookingTicket";
 import ContHost from "./components/ContHost";
-// import AboutUser from "./components/Aboutuser";
-
-
 function App() {
   return (
-    
       <Routes>
         <Route path="/signup" element={<Signin />} />
         <Route path="/login" element={<Login />} />
@@ -32,10 +28,6 @@ function App() {
       <Route path = "/conthost" element={<ContHost/>}/>
 
       </Routes>
-    // <Home/>
-    // <AboutUser/>
-    // <detailEvent/>
-    //<BookingTicket/>
   );
 }
 

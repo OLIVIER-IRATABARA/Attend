@@ -23,7 +23,7 @@ export default function SignUp2() {
     // formData.append("phone", phone);
     formData.append("location", location);
 
-    fetch("http://localhost:1010/profile/create", {
+    fetch("https://attend-02uf.onrender.com/profile/create", {
       method: "POST",
       body: formData,
     })

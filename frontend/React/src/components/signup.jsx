@@ -18,7 +18,7 @@ export default function Signin() {
 
     const data = { name, email, phone, password };
 
-    fetch("http://localhost:1010/create", {
+    fetch("https://attend-02uf.onrender.com/create", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(data),

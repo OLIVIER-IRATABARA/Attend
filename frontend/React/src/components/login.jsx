@@ -12,7 +12,7 @@ export default function Login() {
       return;
     }
 
-    fetch("http://localhost:1010/select", {
+    fetch("https://attend-02uf.onrender.com/select", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       credentials: "include",

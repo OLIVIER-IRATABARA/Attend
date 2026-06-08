@@ -22,7 +22,7 @@ export default function Host() {
     formData.append("location", location);
     formData.append("photo", photo);
 
-    fetch("http://localhost:1010/events/create", {
+    fetch("https://attend-02uf.onrender.com/create", {
       method: "POST",
       body: formData, // ❌ NO headers here
     })

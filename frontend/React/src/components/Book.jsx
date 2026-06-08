@@ -5,7 +5,7 @@ export default function Book() {
   const [events, setEvents] = useState([])
   const navigate = useNavigate();
   useEffect(()=>{
-  axios.get("http://localhost:1010/events/explore", { withCredentials: true })
+  axios.get("https://attend-02uf.onrender.com/events/explore", { withCredentials: true })
   .then(res => setEvents(res.data))
   .catch(err => console.error(err));
   },[])
@@ -18,7 +18,7 @@ export default function Book() {
       {/* Event Image Container */}
       <div className="relative h-48 w-full overflow-hidden">
         <img 
-          src={`http://localhost:1010/uploads/${event.photo}`} 
+          src={`https://attend-02uf.onrender.com/uploads/${event.photo}`} 
           alt={event.eventname} 
           className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
         />
