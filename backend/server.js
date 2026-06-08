@@ -30,19 +30,27 @@ mongoose.connect(mongoUrl)
 
 // ------------------ Middleware ------------------
 app.use(express.json());
-// 1. Clean the Frontend URL (Add this near your mongoUrl logic)
+// 1. Clean the Frontend URL
 const rawFrontendUrl = process.env.FRONTEND_URL || "http://localhost:5173";
 const cleanFrontendUrl = rawFrontendUrl
   .trim()
-  .replace(/^['"](.+)['"];?$/, "$1") // Removes quotes
-  .replace(/;$/, "");                // Removes trailing semicolon
+  .replace(/^['"](.+)['"];?$/, "$1") 
+  .replace(/;$/, "");                
 
-// 2. Use the CLEANED variable in CORS
+// 2. Updated CORS Configuration
 app.use(cors({
-  origin: [cleanFrontendUrl, "https://attend-1-w4fe.onrender.com"],
+  origin: [
+    cleanFrontendUrl, 
+    "https://onrender.com", // Your exact live frontend URL
+    "http://localhost:5173"              // Fallback safety for local tests
+  ],
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
   credentials: true
 }));
 
+// 3. Handle OPTIONS preflight requests explicitly (Add this line right below)
+app.options('*splat', cors());
 
 app.use(
   session({
