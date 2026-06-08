@@ -31,23 +31,63 @@ mongoose.connect(mongoUrl)
 // ------------------ Middleware ------------------
 app.use(express.json());
 // 1. Clean the Frontend URL
-const rawFrontendUrl = process.env.FRONTEND_URL || "http://localhost:5173";
-const cleanFrontendUrl = rawFrontendUrl
-  .trim()
-  .replace(/^['"](.+)['"];?$/, "$1") 
-  .replace(/;$/, "");                
+// const rawFrontendUrl = process.env.FRONTEND_URL || "http://localhost:5173";
+// const cleanFrontendUrl = rawFrontendUrl
+//   .trim()
+//   .replace(/^['"](.+)['"];?$/, "$1") 
+//   .replace(/;$/, "");                
 
-// 2. Updated CORS Configuration
+// // 2. Updated CORS Configuration
+// app.use(cors({
+//   origin: [
+//     cleanFrontendUrl, 
+//     "https://onrender.com", // Your exact live frontend URL
+//     "http://localhost:5173"              // Fallback safety for local tests
+//   ],
+//   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+//   allowedHeaders: ['Content-Type', 'Authorization'],
+//   credentials: true
+// }));
+// Remove or comment out the rawFrontendUrl and cleanFrontendUrl regex blocks entirely
+
+// Explicitly array mapping prevents parsing anomalies on Render containers
+const allowedOrigins = [
+  "https://attend-1-w4fe.onrender.com", // Your exact production frontend
+  "http://localhost:5173"              // Your local development setup
+];
+
 app.use(cors({
-  origin: [
-    cleanFrontendUrl, 
-    "https://onrender.com", // Your exact live frontend URL
-    "http://localhost:5173"              // Fallback safety for local tests
-  ],
+  origin: function (origin, callback) {
+    // Allow requests with no origin like Postman, curl, or internal mobile assets
+    if (!origin) return callback(null, true);
+    
+    if (allowedOrigins.indexOf(origin) !== -1) {
+      callback(null, true);
+    } else {
+      console.error(`Blocked by CORS for origin: ${origin}`);
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization'],
   credentials: true
 }));
+
+// Express 5 Wildcard fix for CORS Preflight OPTIONS requests
+app.use((req, res, next) => {
+  const origin = req.headers.origin;
+  if (allowedOrigins.includes(origin)) {
+    res.header("Access-Control-Allow-Origin", origin);
+    res.header("Access-Control-Allow-Credentials", "true");
+    res.header("Access-Control-Allow-Methods", "GET,POST,PUT,DELETE,OPTIONS");
+    res.header("Access-Control-Allow-Headers", "Content-Type,Authorization");
+  }
+  if (req.method === 'OPTIONS') {
+    return res.sendStatus(200);
+  }
+  next();
+});
+
 
 // 3. Handle OPTIONS preflight requests explicitly (Add this line right below)
 app.options('*splat', cors());
