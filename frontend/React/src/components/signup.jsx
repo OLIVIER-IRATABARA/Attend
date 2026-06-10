@@ -1,11 +1,13 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { lazy, Suspense } from "react";
 
 export default function Signin() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
   const [password, setPassword] = useState("");
+  const [isSubmitting, setisSubmitting] = useState(false);
   const navigate = useNavigate();
 
   const handleSubmit = (e) => {
@@ -15,6 +17,8 @@ export default function Signin() {
       alert("You must fill all required fields");
       return;
     }
+
+    setisSubmitting(true); // Moved inside validation check
 
     const data = { name, email, phone, password };
 
@@ -26,37 +30,76 @@ export default function Signin() {
       .then((res) => res.json())
       .then((data) => {
         localStorage.setItem("userId", data.userId); // store userId for profile
-        alert("Account created! Complete your profile now.");
+        setisSubmitting(false);
         navigate("/sign2"); // go to profile completion
       })
-      .catch((err) => console.error(err));
+      .catch((err) => {
+        console.error(err);
+        alert("Something went wrong. Please try again.");
+        setisSubmitting(false);
+      });
   };
+
+  // DESIGNED LOADING SCREEN WITH SPINNER ICON
+  if (isSubmitting) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-indigo-600 to-purple-700 flex flex-col items-center justify-center text-white p-4">
+        <div className="flex flex-col items-center space-y-4 bg-white/10 backdrop-blur-md p-8 rounded-2xl shadow-2xl max-w-sm w-full text-center border border-white/20">
+          
+          {/* Animated SVG Spinner Icon */}
+          <svg 
+            className="animate-spin h-12 w-12 text-white" 
+            xmlns="http://w3.org" 
+            fill="none" 
+            viewBox="0 0 24 24"
+          >
+            <circle 
+              className="opacity-25" 
+              cx="12" 
+              cy="12" 
+              r="10" 
+              stroke="currentColor" 
+              strokeWidth="4"
+            />
+            <path 
+              className="opacity-75" 
+              fill="currentColor" 
+              d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+            />
+          </svg>
+
+          <div>
+            <h3 className="text-xl font-bold tracking-wide">Creating Account</h3>
+            <p className="text-indigo-200 text-sm mt-1">Please wait a moment...</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen grid grid-cols-1 lg:grid-cols-2">
-      {/* LEFT Sliding Images */}
       {/* LEFT: Gradient & Motivational Content */}
-<div className="hidden lg:flex flex-col justify-center items-start bg-gradient-to-br from-purple-700 via-indigo-600 to-blue-500 text-white p-16 space-y-6 w-full">
-  <h2 className="text-5xl font-bold leading-tight">
-    Join Attend Rwanda
-  </h2>
-  <p className="text-lg max-w-md">
-    Discover and participate in amazing online events—from concerts and workshops to tech meetups and festivals. 
-    Connect with others, book instantly, and make every experience unforgettable. Sign up now and start your journey!
-  </p>
+      <div className="hidden lg:flex flex-col justify-center items-start bg-gradient-to-br from-purple-700 via-indigo-600 to-blue-500 text-white p-16 space-y-6 w-full">
+        <h2 className="text-5xl font-bold leading-tight">
+          Join Attend Rwanda
+        </h2>
+        <p className="text-lg max-w-md">
+          Discover and participate in amazing online events—from concerts and workshops to tech meetups and festivals. 
+          Connect with others, book instantly, and make every experience unforgettable. Sign up now and start your journey!
+        </p>
 
-  <ul className="space-y-3 text-white/90 list-disc list-inside text-lg">
-    <li>Explore events anytime, anywhere</li>
-    <li>Seamless booking and ticket management</li>
-    <li>Host or join community gatherings easily</li>
-    <li>Stay updated with trending online experiences</li>
-  </ul>
+        <ul className="space-y-3 text-white/90 list-disc list-inside text-lg">
+          <li>Explore events anytime, anywhere</li>
+          <li>Seamless booking and ticket management</li>
+          <li>Host or join community gatherings easily</li>
+          <li>Stay updated with trending online experiences</li>
+        </ul>
 
-  <div className="mt-6 bg-white/20 px-4 py-2 rounded-lg font-medium">
-    💡 Fast, easy, and fun—your event journey starts here!
-  </div>
-</div>
-
+        <div className="mt-6 bg-white/20 px-4 py-2 rounded-lg font-medium">
+          💡 Fast, easy, and fun—your event journey starts here!
+        </div>
+      </div>
 
       {/* RIGHT Sign Up Form */}
       <div className="flex items-center justify-center bg-gradient-to-br from-indigo-500 to-purple-600 p-6">
@@ -71,6 +114,7 @@ export default function Signin() {
                 placeholder="Full name"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
+                required
                 className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none"
               />
               <input
@@ -78,6 +122,7 @@ export default function Signin() {
                 placeholder="Email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
+                required
                 className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none"
               />
               <input
@@ -85,6 +130,7 @@ export default function Signin() {
                 placeholder="Phone number"
                 value={phone}
                 onChange={(e) => setPhone(e.target.value)}
+                required
                 className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none"
               />
               <input
@@ -92,6 +138,7 @@ export default function Signin() {
                 placeholder="Password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
+                required
                 className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none"
               />
             </div>
@@ -99,7 +146,7 @@ export default function Signin() {
               type="submit"
               className="w-full mt-6 bg-indigo-600 text-white py-2 rounded-lg font-semibold hover:bg-indigo-700 transition"
             >
-              Sign Up
+              SignUp
             </button>
           </form>
           <p className="text-center text-sm text-gray-600 mt-6">

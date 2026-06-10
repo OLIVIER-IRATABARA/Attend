@@ -30,27 +30,6 @@ mongoose.connect(mongoUrl)
 
 // ------------------ Middleware ------------------
 app.use(express.json());
-// 1. Clean the Frontend URL
-// const rawFrontendUrl = process.env.FRONTEND_URL || "http://localhost:5173";
-// const cleanFrontendUrl = rawFrontendUrl
-//   .trim()
-//   .replace(/^['"](.+)['"];?$/, "$1") 
-//   .replace(/;$/, "");                
-
-// // 2. Updated CORS Configuration
-// app.use(cors({
-//   origin: [
-//     cleanFrontendUrl, 
-//     "https://onrender.com", // Your exact live frontend URL
-//     "http://localhost:5173"              // Fallback safety for local tests
-//   ],
-//   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-//   allowedHeaders: ['Content-Type', 'Authorization'],
-//   credentials: true
-// }));
-// Remove or comment out the rawFrontendUrl and cleanFrontendUrl regex blocks entirely
-
-// Explicitly array mapping prevents parsing anomalies on Render containers
 const allowedOrigins = [
   "https://attend-1-w4fe.onrender.com", // Your exact production frontend
   "http://localhost:5173"              // Your local development setup
@@ -170,6 +149,15 @@ const ContHost = new mongoose.Schema({
 
 })
 const finhost = mongoose.model("conthosts",ContHost)
+
+const BookSchema = new mongoose.Schema({
+  category :String,
+    fullname:String,
+    Email:String,
+    phone:String
+  
+})
+const book = mongoose.model("Bookings",BookSchema)
 // Root
 
 app.get("/display", isAuthenticated, async (req, res) => {
@@ -382,6 +370,13 @@ app.get("/events/explore/:id", async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 });
+app.post('/book/ticket',async(req,res)=>{
+  const {category,fullname,Email,phone} =req.body
+  const booking = new book({category,fullname,Email,phone})
+  const result = await booking.save()
+  if(result) return res.status(400).json({message:"you haven't book any ticket"})
+  res.status(200).json({message:"booking well done"})
+})
 
 // ------------------ Start Server ------------------
 app.listen(PORT,'0.0.0.0', () =>

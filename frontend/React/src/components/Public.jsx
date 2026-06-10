@@ -1,7 +1,9 @@
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 export default function Public() {
   const navigate = useNavigate();
+  const [isNavigating,setisNavigating] =useState(false)
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-start bg-gradient-to-br from-indigo-500 to-purple-600 text-white pt-16 px-4">
