@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
-import {Link} from 'react-router-dom'
+import { Link } from 'react-router-dom';
 
 export default function EventDetail() {
-  const { id } = useParams(); // Gets the ID from the URL
+  const { id } = useParams(); 
   const [event, setEvent] = useState(null);
   const navigate = useNavigate();
 
@@ -16,7 +16,6 @@ export default function EventDetail() {
 
   if (!event) return <div className="text-white text-center mt-20">Loading Event...</div>;
   console.log("Current event data:", event);
-
 
   return (
     <div className="min-h-screen bg-gray-50 p-8">
@@ -34,20 +33,23 @@ export default function EventDetail() {
             <span className="text-indigo-700 px-4 py-1 rounded-full text-sm font-semibold">
                {new Date(event.event_date).toLocaleDateString()} : {event.event_time}
             </span>
-            <span className="bg-black-400 text-green-700 px-4 py-1 rounded-full text-sm font-semibold">
+            <span className="bg-gray-100 text-green-700 px-4 py-1 rounded-full text-sm font-semibold">
                {event.location || "Rwanda"}
             </span>
           </div>
           
-
-          <button className="mt-8 w-full py-4 bg-indigo-600 text-white font-bold rounded-xl hover:bg-indigo-700 transition-all shadow-lg">
-          <p className="text-gray-600 leading-relaxed text-lg">
+          {/* FIX 1: Removed button wrappers from text tags */}
+          <p className="text-gray-600 leading-relaxed text-lg mb-8">
             {event.eventdescription || "Join us for this amazing event! Secure your tickets now to ensure your spot."}
-          </p></button>
-          <button className="mt-8 w-full py-4 bg-indigo-600 text-white font-bold rounded-xl hover:bg-indigo-700 transition-all shadow-lg"><Link to="/BookingTicket">
+          </p>
+
+          {/* FIX 2 & 3: Used template literals for dynamic link path, and unnested the button */}
+          <Link 
+            to={`/BookingTicket/${event._id}`}
+            className="block text-center w-full py-4 bg-indigo-600 text-white font-bold rounded-xl hover:bg-indigo-700 transition-all shadow-lg"
+          >
             Book Tickets Now
-            </Link>
-          </button>
+          </Link>
         </div>
       </div>
     </div>

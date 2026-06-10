@@ -24,7 +24,7 @@ function App() {
       <Route path="/sign2" element={<SignUp2/>}/>
       <Route path="/" element={<Public/>}/>
       <Route path="/detailEvent/:id" element={<EventDetail/>}/>
-      <Route path="/BookingTicket" element={<BookingTicket/>}/>
+      <Route path="/BookingTicket/:id" element={<BookingTicket/>}/>
       <Route path = "/conthost" element={<ContHost/>}/>
 
       </Routes>

@@ -151,6 +151,11 @@ const ContHost = new mongoose.Schema({
 const finhost = mongoose.model("conthosts",ContHost)
 
 const BookSchema = new mongoose.Schema({
+  ticketId: {
+    type: mongoose.Schema.Types.ObjectId, // Connects directly to the event collection ID
+    ref: 'Event',                         // References your Event model configuration
+    required: true
+  },
   category :String,
     fullname:String,
     Email:String,
@@ -370,13 +375,82 @@ app.get("/events/explore/:id", async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 });
-app.post('/book/ticket',async(req,res)=>{
-  const {category,fullname,Email,phone} =req.body
-  const booking = new book({category,fullname,Email,phone})
-  const result = await booking.save()
-  if(result) return res.status(400).json({message:"you haven't book any ticket"})
-  res.status(200).json({message:"booking well done"})
-})
+// Install required package via terminal: npm install axios
+const axios = require('axios'); 
+
+app.post('/book/ticket/:id', async (req, res) => {
+    try {
+        const { category, fullname, Email, phone, paymentMethod } = req.body;
+        const { id } = req.params; 
+
+        // 1. Assign local ticket prices dynamically based on category configurations
+        let amount = 10000; // Default Regular price in RWF
+        if (category === 'VIP') amount = 25000;
+        if (category === 'VVIP') amount = 50000;
+
+        // 2. Generate a unique system reference token for tracking
+        const transactionRef = `TX-${Date.now()}-${Math.floor(Math.random() * 1000)}`;
+
+        // 3. Process payment logic conditions if Mobile Money path is targeted
+        if (paymentMethod === 'momo') {
+            try {
+                // Initialize Payment API compilation (Flutterwave Mobile Money Endpoint Example)
+                const paymentResponse = await axios.post(
+                    'https://flutterwave.com',
+                    {
+                        tx_ref: transactionRef,
+                        amount: amount,
+                        currency: 'RWF',
+                        network: 'MTN', // Handles routing to Rwandan phone systems
+                        email: Email,
+                        phone_number: phone,
+                        fullname: fullname,
+                        redirect_url: 'https://attend-1-w4fe.onrender.com/BookingTicket'
+                    },
+                    {
+                        headers: {
+                            Authorization: `Bearer ${process.env.FLUTTERWAVE_SECRET_KEY}` // Stored securely in your .env variables
+                        }
+                    }
+                );
+
+                // Stop execution if downstream provider rejects data parameters instantly
+                if (paymentResponse.data.status !== 'success') {
+                    return res.status(400).json({ message: "Mobile Money initiation failed." });
+                }
+            } catch (paymentErr) {
+                console.error("Gateway Connection Error:", paymentErr.response?.data || paymentErr.message);
+                return res.status(502).json({ message: "Failed to connect to payment carrier. Try again." });
+            }
+        }
+
+        // 4. Save booking payload details with a status tracking parameter state
+        const booking = new book({ 
+            ticketId: id,
+            category, 
+            fullname, 
+            Email, 
+            phone,
+            paymentStatus: paymentMethod === 'momo' ? 'Pending PIN Entry' : 'Completed',
+            transactionReference: transactionRef
+        });
+
+        const result = await booking.save();
+        if (!result) { 
+            return res.status(400).json({ message: "Database dropped transactional properties." });
+        }
+        
+        return res.status(200).json({ 
+            message: "Booking submitted! Complete the prompt pushed to your handset screen.",
+            reference: transactionRef
+        });
+
+    } catch (error) {
+        console.error("Booking Error:", error);
+        res.status(500).json({ message: "Internal system fallback error" });
+    }
+});
+
 
 // ------------------ Start Server ------------------
 app.listen(PORT,'0.0.0.0', () =>
