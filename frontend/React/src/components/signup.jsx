@@ -1,12 +1,19 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { lazy, Suspense } from "react";
+import { API_URL } from "../config/api";
+
+const ROLES = [
+  { value: "booker", label: "Book events — browse and buy tickets" },
+  { value: "host", label: "Host events — create and manage events" },
+  { value: "confirmer", label: "Confirm events — review and approve events" }
+];
 
 export default function Signin() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
   const [password, setPassword] = useState("");
+  const [role, setRole] = useState("booker");
   const [isSubmitting, setisSubmitting] = useState(false);
   const navigate = useNavigate();
 
@@ -20,18 +27,20 @@ export default function Signin() {
 
     setisSubmitting(true); // Moved inside validation check
 
-    const data = { name, email, phone, password };
+    const data = { name, email, phone, password, role };
 
-    fetch("https://attend-02uf.onrender.com/create", {
+    fetch(`${API_URL}/create`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(data),
     })
-      .then((res) => res.json())
-      .then((data) => {
-        localStorage.setItem("userId", data.userId); // store userId for profile
+      .then((res) => res.json().then((body) => ({ ok: res.ok, body })))
+      .then(({ ok, body }) => {
+        if (!ok) throw new Error(body.message || "Signup failed");
+        localStorage.setItem("userId", body.userId);
+        localStorage.setItem("role", body.role);
         setisSubmitting(false);
-        navigate("/sign2"); // go to profile completion
+        navigate("/sign2");
       })
       .catch((err) => {
         console.error(err);
@@ -141,6 +150,24 @@ export default function Signin() {
                 required
                 className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none"
               />
+              <div>
+                <label className="block text-sm text-gray-600 mb-2 font-medium">What will you do on Attend?</label>
+                <div className="space-y-2">
+                  {ROLES.map((r) => (
+                    <label key={r.value} className={`flex items-start gap-3 p-3 border rounded-lg cursor-pointer ${role === r.value ? "border-indigo-500 bg-indigo-50" : "border-gray-200"}`}>
+                      <input
+                        type="radio"
+                        name="role"
+                        value={r.value}
+                        checked={role === r.value}
+                        onChange={(e) => setRole(e.target.value)}
+                        className="mt-1"
+                      />
+                      <span className="text-sm text-gray-700">{r.label}</span>
+                    </label>
+                  ))}
+                </div>
+              </div>
             </div>
             <button
               type="submit"

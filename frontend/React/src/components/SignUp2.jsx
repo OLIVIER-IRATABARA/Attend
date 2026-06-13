@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react"; 
 import { useNavigate } from "react-router-dom"; 
+import { API_URL } from "../config/api";
 
 export default function SignUp2() { 
   const [username, setUsername] = useState(""); 
@@ -29,7 +30,7 @@ export default function SignUp2() {
     formData.append("bio", bio); 
     formData.append("location", location); 
 
-    fetch("https://attend-02uf.onrender.com/profile/create", { 
+    fetch(`${API_URL}/profile/create`, {
       method: "POST", 
       body: formData, 
     }) 

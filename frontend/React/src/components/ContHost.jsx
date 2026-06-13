@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { API_URL } from '../config/api';
 
 export default function ContHost() {
     const [firstclass, setfirstclass] = useState("");
@@ -26,10 +27,10 @@ export default function ContHost() {
         };
 
         // Note the endpoint: /events/createcont
-        axios.post("https://attend-02uf.onrender.com/events/createcont", costData)
+        axios.post(`${API_URL}/events/createcont`, costData, { withCredentials: true })
             .then(res => {
                 alert("Pricing saved successfully!");
-                navigate("/home"); // Redirect to home/explore
+                navigate("/my-events");
             })
             .catch(err => {
                 console.error("Costs not saved", err);
@@ -43,15 +44,15 @@ export default function ContHost() {
                 <div className='text-3xl font-bold'>Set Ticket Prices</div>
                 <p className='text-sm text-gray-600'>Linking to Event ID: {eventId}</p>
                 
-                <input type="number" placeholder='Cost of 1st class'
+                <input type="number" placeholder='Regular ticket price (RWF)'
                     value={firstclass} onChange={(e) => setfirstclass(e.target.value)}
                     className='border border-blue-500 rounded p-2 w-full' />
                 
-                <input type="number" placeholder='Cost of 2nd class'
+                <input type="number" placeholder='VIP ticket price (RWF)'
                     value={secondclass} onChange={(e) => setsecondclass(e.target.value)}
                     className='border border-blue-500 rounded p-2 w-full' />
                 
-                <input type="number" placeholder='Cost of 3rd class'
+                <input type="number" placeholder='VVVIP ticket price (RWF)'
                     value={thirdclass} onChange={(e) => setthirdclass(e.target.value)}
                     className='border border-blue-500 rounded p-2 w-full' />
                 

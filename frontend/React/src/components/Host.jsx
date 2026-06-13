@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { API_URL } from "../config/api";
 
 export default function Host() {
   const [eventname, setEventname] = useState("");
@@ -8,12 +9,11 @@ export default function Host() {
   const [event_time, setEventTime] = useState("");
   const [location, setLocation] = useState("");
   const [photo, setPhoto] = useState(null);
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    // ✅ FormData is REQUIRED for files
     const formData = new FormData();
     formData.append("eventname", eventname);
     formData.append("eventdescription", eventdescription);
@@ -22,32 +22,34 @@ export default function Host() {
     formData.append("location", location);
     formData.append("photo", photo);
 
-    fetch("https://attend-02uf.onrender.com/create", {
+    fetch(`${API_URL}/events/create`, {
       method: "POST",
-      body: formData, // ❌ NO headers here
+      body: formData,
+      credentials: "include"
     })
-      .then((res) => res.json())
-      .then((resData) => {
-        alert(resData.message);
+      .then((res) => res.json().then((data) => ({ ok: res.ok, data })))
+      .then(({ ok, data }) => {
+        if (!ok) throw new Error(data.message || "Failed to create event");
+        alert(data.message);
         setEventname("");
         setEventdescription("");
         setEventDate("");
         setEventTime("");
         setLocation("");
         setPhoto(null);
-        navigate("/conthost", { state: { eventId: resData.eventId } });
+        navigate("/conthost", { state: { eventId: data.eventId } });
       })
-      .catch((err) => console.error(err));
+      .catch((err) => alert(err.message || "Could not create event"));
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 flex items-center justify-center p-6">
-      <button onClick={() => navigate(-1)} className="mb-6 text-indigo-600 font-bold">← Back</button>
+    <div className="min-h-screen bg-gray-100 flex flex-col items-center justify-center p-6">
+      <button onClick={() => navigate(-1)} className="mb-6 self-start text-indigo-600 font-bold">← Back</button>
       <div className="bg-white w-full max-w-3xl rounded-2xl shadow-lg p-8">
-        <h2 className="text-3xl font-bold text-gray-800 mb-6">Host an Event</h2>
+        <h2 className="text-3xl font-bold text-gray-800 mb-2">Host an Event</h2>
+        <p className="text-gray-500 mb-6 text-sm">Events in Rwanda are reviewed by a confirmer before bookers can see them.</p>
 
         <form onSubmit={handleSubmit} className="space-y-5">
-          {/* Event Name */}
           <input
             type="text"
             value={eventname}
@@ -57,7 +59,6 @@ export default function Host() {
             className="w-full border p-2 rounded"
           />
 
-          {/* Description */}
           <textarea
             value={eventdescription}
             onChange={(e) => setEventdescription(e.target.value)}
@@ -66,7 +67,6 @@ export default function Host() {
             className="w-full border p-2 rounded"
           />
 
-          {/* Date */}
           <input
             type="date"
             value={event_date}
@@ -75,7 +75,6 @@ export default function Host() {
             className="w-full border p-2 rounded"
           />
 
-          {/* Time */}
           <input
             type="time"
             value={event_time}
@@ -84,18 +83,15 @@ export default function Host() {
             className="w-full border p-2 rounded"
           />
 
-          {/* Location */}
           <input
             type="text"
             value={location}
             onChange={(e) => setLocation(e.target.value)}
-            placeholder="Location"
+            placeholder="Location (e.g. Kigali Convention Centre)"
             required
             className="w-full border p-2 rounded"
           />
-        
 
-          {/* ✅ Photo */}
           <input
             type="file"
             accept="image/*"
@@ -103,10 +99,9 @@ export default function Host() {
             required
             className="w-full"
           />
-          
 
-          <button className="w-full bg-indigo-600 text-white p-3 rounded">
-            Continue
+          <button className="w-full bg-indigo-600 text-white p-3 rounded hover:bg-indigo-700">
+            Submit for Review
           </button>
         </form>
       </div>
